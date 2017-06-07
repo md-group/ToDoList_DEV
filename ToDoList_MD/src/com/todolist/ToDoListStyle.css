@@ -1,0 +1,19 @@
+AnchorPane{
+	-fx-padding: 0;
+	-fx-background-color: #42e2f4;
+}
+
+*{
+	-fx-border-radius: 0 0 0 0;
+	-fx-background-radius: 0 0 0 0;
+}
+.Button{
+	-fx-border-color: #41acf4;
+	-fx-border-width: 1 1 1 1;
+	-fx-background-color: #42e2f4;
+}
+.DatePicker{
+	-fx-border-color: #41acf4;
+	-fx-border-width: 1 1 1 1;
+	-fx-background-color: #42e2f4;
+}
