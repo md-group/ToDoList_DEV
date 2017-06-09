@@ -1,9 +1,12 @@
 package com.todolist;
 
+import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.List;
 import java.util.ResourceBundle;
-
-import javafx.util.StringConverter;
+import java.util.stream.Collectors;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -13,121 +16,94 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
-import javafx.scene.control.ListCell;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableColumn.CellEditEvent;
 import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.cell.TextFieldTableCell;
 
-public class ToDoListController implements Initializable{
+public class ToDoListController implements Initializable {
 
+	@FXML
+	private Button bttnAddEvent;
 
-    @FXML
-    private Button bttnAddEvent;
+	@FXML
+	private DatePicker pickerDate;
 
-    @FXML
-    private DatePicker pickerDate;
+	@FXML
+	private ComboBox<String> eventsSelector;
 
-    @FXML
-    private ComboBox<EventsList> eventsSelector;
-    private ObservableList<EventsList> myEventsSelector = FXCollections.observableArrayList();
+	@FXML
+	private Button bttnDone;
 
-    @FXML
-    private Button bttnDone;
+	@FXML
+	private Button bttnRemove;
 
-    @FXML
-    private Button bttnRemove;
+	@FXML
+	private TableView<EventsBean> eventsTable;
 
-    @FXML
-    private TableView<?> eventsTable;
+	@FXML
+	private TableColumn<?, ?> eventCol;
 
-    @FXML
-    private TableColumn<EventsList, String> eventCol;
+	@FXML
+	private TableColumn<?, ?> dateCol;
 
-    @FXML
-    private TableColumn<?, ?> dateCol;
+	@FXML
+	private TableColumn<?, ?> doneCol;
 
-    @FXML
-    private TableColumn<?, ?> doneCol;
+	@FXML
+	private TableColumn<EventsBean, String> observationCol;
 
-    @FXML
-    private TableColumn<?, ?> observationCol;
+	@FXML
+	private TableColumn<?, ?> removeCol;
 
-    @FXML
-    private TableColumn<?, ?> removeCol;
+	@FXML
+	void bttnAddEventAction(ActionEvent event) {
 
-    @FXML
-    void bttnAddEventAction(ActionEvent event) {
-
-    }
-
-    @FXML
-    void bttnDoneAction(ActionEvent event) {
-
-    }
-
-    @FXML
-    void bttnRemoveAction(ActionEvent event) {
-
-    }
-
-
-    @FXML
-    void pickerDateAction(ActionEvent event) {
-
-    }
-    
-    public 
-	
-	@Override
-	void initialize(URL location, ResourceBundle resources) {
-		System.out.println("The pane loaded");
-		
-		// Add some sample data.
-		myEventsSelector.add(new EventsList("Office at 8:00 AM"));
-		myEventsSelector.add(new EventsList("Meeting with Kevin at 8:30 AM" ));
-		myEventsSelector.add(new EventsList("Meeting with Donald at 10:00 AM"));
-		myEventsSelector.add(new EventsList("Launch at 13:00 PM"));
-		myEventsSelector.add(new EventsList("Meeting at 14:30 PM"));
-		
-		// Init ComboBox items.
-		eventsSelector.setItems(myEventsSelector);
-		
-		// Define rendering of the list of values in ComboBox drop down. 
-		eventsSelector.setCellFactory((comboBox) -> {
-		    return new ListCell<EventsList>() {
-		        @Override
-		        protected void updateItem(EventsList item, boolean empty) {
-		            super.updateItem(item, empty);
-
-		            if (item == null || empty) {
-		                setText(null);
-		            } else {
-		                setText(item.getEventsList());
-		            }
-		        }
-		    };
-		});
-
-		// Define rendering of selected value shown in ComboBox.
-		eventsSelector.setConverter(new StringConverter<EventsList>() {
-		    public String toString(EventsList eventsList) {
-		        if (eventsList == null) {
-		            return null;
-		        } else {
-		            return eventsList.getEventsList();
-		        }
-		    }
-
-		    public EventsList fromString(String eventsListString) {
-		        return null; // No conversion fromString needed.
-		    }
-		});
-		
-		// Handle ComboBox event.
-		eventsSelector.setOnAction((event) -> {
-		    EventsList selectedEvent = eventsSelector.getSelectionModel().getSelectedItem();
-		    System.out.println("ComboBox Action (selected: " + selectedEvent.toString() + ")");
-		});
-		
 	}
 
+	@FXML
+	void bttnDoneAction(ActionEvent event) {
+
+	}
+
+	@FXML
+	void bttnRemoveAction(ActionEvent event) {
+
+	}
+
+	@FXML
+	void pickerDateAction(ActionEvent event) {
+
+	}
+	
+	private ObservableList<EventsBean> dataList = FXCollections.observableArrayList(new EventsBean(""));
+
+	@Override
+	public void initialize(URL location, ResourceBundle resources) {
+		System.out.println("The pane loaded");
+
+		List<String> myList;
+		try {
+			myList = Files.lines(Paths.get("src/com/todolist/EventsList.txt")).collect(Collectors.toList());
+			eventsSelector.setItems(FXCollections.observableArrayList(myList));
+		} catch (IOException e) {
+			System.out.println("Don t find file");
+		}
+		 
+		observationCol.setCellValueFactory(new PropertyValueFactory<>("observation"));
+		
+		observationCol.setCellFactory(TextFieldTableCell.<EventsBean>forTableColumn());
+		
+		observationCol.setOnEditCommit(
+			    (CellEditEvent<EventsBean, String> t) -> {
+			        ((EventsBean) t.getTableView().getItems().get(
+			            t.getTablePosition().getRow())
+			            ).setObservation(t.getNewValue());
+			});
+		
+		eventsTable.setItems(dataList);
+		eventsTable.setEditable(true);
+		observationCol.setSortable(false);
+	}
 }
