@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
@@ -24,6 +25,9 @@ import javafx.scene.control.cell.TextFieldTableCell;
 
 public class ToDoListController implements Initializable {
 
+	String text = "";
+	LocalDate isoDate;
+
 	@FXML
 	private Button bttnAddEvent;
 
@@ -43,10 +47,10 @@ public class ToDoListController implements Initializable {
 	private TableView<EventsBean> eventsTable;
 
 	@FXML
-	private TableColumn<?, ?> eventCol;
+	private TableColumn<EventsBean, String> eventCol;
 
 	@FXML
-	private TableColumn<?, ?> dateCol;
+	private TableColumn<EventsBean, LocalDate> dateCol;
 
 	@FXML
 	private TableColumn<?, ?> doneCol;
@@ -56,11 +60,6 @@ public class ToDoListController implements Initializable {
 
 	@FXML
 	private TableColumn<?, ?> removeCol;
-
-	@FXML
-	void bttnAddEventAction(ActionEvent event) {
-
-	}
 
 	@FXML
 	void bttnDoneAction(ActionEvent event) {
@@ -74,10 +73,10 @@ public class ToDoListController implements Initializable {
 
 	@FXML
 	void pickerDateAction(ActionEvent event) {
-
+		isoDate = pickerDate.getValue();
 	}
-	
-	private ObservableList<EventsBean> dataList = FXCollections.observableArrayList(new EventsBean(""));
+
+	ObservableList<EventsBean> dataList = FXCollections.observableArrayList();
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -90,20 +89,24 @@ public class ToDoListController implements Initializable {
 		} catch (IOException e) {
 			System.out.println("Don t find file");
 		}
-		 
-		observationCol.setCellValueFactory(new PropertyValueFactory<>("observation"));
-		
+
+		eventCol.setCellValueFactory(new PropertyValueFactory<EventsBean, String>("event"));
+		dateCol.setCellValueFactory(new PropertyValueFactory<EventsBean, LocalDate>("date"));
+		observationCol.setCellValueFactory(new PropertyValueFactory<EventsBean, String>("observation"));
 		observationCol.setCellFactory(TextFieldTableCell.<EventsBean>forTableColumn());
-		
-		observationCol.setOnEditCommit(
-			    (CellEditEvent<EventsBean, String> t) -> {
-			        ((EventsBean) t.getTableView().getItems().get(
-			            t.getTablePosition().getRow())
-			            ).setObservation(t.getNewValue());
-			});
-		
+		observationCol.setOnEditCommit((CellEditEvent<EventsBean, String> t) -> {
+			((EventsBean) t.getTableView().getItems().get(t.getTablePosition().getRow()))
+					.setObservation(t.getNewValue());
+		});
+		observationCol.setSortable(false);
+
 		eventsTable.setItems(dataList);
 		eventsTable.setEditable(true);
-		observationCol.setSortable(false);
+
+		bttnAddEvent.setOnAction((ActionEvent e) -> {
+			text = eventsSelector.getValue().toString();
+			dataList.add(new EventsBean(text, isoDate, ""));
+		});
+
 	}
 }
