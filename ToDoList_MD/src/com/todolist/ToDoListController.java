@@ -20,6 +20,7 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableColumn.CellEditEvent;
 import javafx.scene.control.TableView;
+import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 
@@ -38,9 +39,6 @@ public class ToDoListController implements Initializable {
 	private ComboBox<String> eventsSelector;
 
 	@FXML
-	private Button bttnDone;
-
-	@FXML
 	private Button bttnRemove;
 
 	@FXML
@@ -53,23 +51,13 @@ public class ToDoListController implements Initializable {
 	private TableColumn<EventsBean, LocalDate> dateCol;
 
 	@FXML
-	private TableColumn<?, ?> doneCol;
+	private TableColumn<EventsBean, Boolean> doneCol;
 
 	@FXML
 	private TableColumn<EventsBean, String> observationCol;
 
 	@FXML
-	private TableColumn<?, ?> removeCol;
-
-	@FXML
-	void bttnDoneAction(ActionEvent event) {
-
-	}
-
-	@FXML
-	void bttnRemoveAction(ActionEvent event) {
-
-	}
+	private TableColumn<EventsBean, Boolean> removeCol;
 
 	@FXML
 	void pickerDateAction(ActionEvent event) {
@@ -89,15 +77,20 @@ public class ToDoListController implements Initializable {
 		} catch (IOException e) {
 			System.out.println("Don t find file");
 		}
-
+		
+		doneCol.setCellFactory(CheckBoxTableCell.forTableColumn(doneCol));
+		removeCol.setCellFactory(CheckBoxTableCell.forTableColumn(removeCol));
+		
 		eventCol.setCellValueFactory(new PropertyValueFactory<EventsBean, String>("event"));
 		dateCol.setCellValueFactory(new PropertyValueFactory<EventsBean, LocalDate>("date"));
+		doneCol.setCellValueFactory(new PropertyValueFactory<EventsBean, Boolean>("done"));
 		observationCol.setCellValueFactory(new PropertyValueFactory<EventsBean, String>("observation"));
 		observationCol.setCellFactory(TextFieldTableCell.<EventsBean>forTableColumn());
 		observationCol.setOnEditCommit((CellEditEvent<EventsBean, String> t) -> {
 			((EventsBean) t.getTableView().getItems().get(t.getTablePosition().getRow()))
 					.setObservation(t.getNewValue());
 		});
+		doneCol.setCellValueFactory(new PropertyValueFactory<EventsBean, Boolean>("remove"));
 		observationCol.setSortable(false);
 
 		eventsTable.setItems(dataList);
@@ -106,6 +99,10 @@ public class ToDoListController implements Initializable {
 		bttnAddEvent.setOnAction((ActionEvent e) -> {
 			text = eventsSelector.getValue().toString();
 			dataList.add(new EventsBean(text, isoDate, ""));
+		});
+		
+		bttnRemove.setOnAction((ActionEvent e) -> {
+			System.out.println("Works");
 		});
 
 	}
