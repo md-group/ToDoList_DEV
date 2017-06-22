@@ -11,14 +11,14 @@ public class EventsBean {
 	
 	private SimpleStringProperty event;
 	private SimpleObjectProperty<LocalDate> date;
-	private SimpleBooleanProperty done;
 	private SimpleStringProperty observation;
+	private SimpleBooleanProperty selected;
 
-	public EventsBean(String event, LocalDate date, String observation) {
+	public EventsBean(String event, LocalDate date, String observation, boolean selected) {
 		this.event = new SimpleStringProperty(event);
 		this.date = new SimpleObjectProperty<LocalDate>(date);
-		this.done = new SimpleBooleanProperty(false);
 		this.observation = new SimpleStringProperty(observation);
+		this.selected = new SimpleBooleanProperty(selected);
 	}
 	public String getEvent() {
 		return event.get();
@@ -27,16 +27,23 @@ public class EventsBean {
 	public LocalDate getDate() {
 		return date.get();
 	}
-	public boolean isDone() {
-		return done.get();
-	}
 	
-	public String getObservation() {
+	public String getObservation(){
 		return observation.get();
 	}
 	
 	public void setObservation(String observation) {
 		this.observation.set(observation);
 	}
+	
+	public boolean getSelected(){
+		return selectedProperty().get();
+	}
 
+	public void setSelected(boolean selected){
+		selectedProperty().set(selected);
+	}
+	public SimpleBooleanProperty selectedProperty() {
+		return this.selected;
+	}
 }

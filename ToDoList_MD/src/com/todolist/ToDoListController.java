@@ -80,17 +80,34 @@ public class ToDoListController implements Initializable {
 		
 		doneCol.setCellFactory(CheckBoxTableCell.forTableColumn(doneCol));
 		removeCol.setCellFactory(CheckBoxTableCell.forTableColumn(removeCol));
-		
+		/*
+		removeCol.setCellFactory(new Callback<TableColumn<EventsBean,Boolean>, TableCell<EventsBean,Boolean>>() {
+			
+			@Override
+			public TableCell<EventsBean, Boolean> call(TableColumn<EventsBean, Boolean> param) {
+				return new CheckBoxTableCell<EventsBean,Boolean>(){
+					
+					@Override
+					public void updateItem(Boolean item, boolean empty) {
+						if(!empty && item != null){
+							EventsBean selectedItem = (EventsBean)getTableRow().getItem();
+							selectedItem.setSelected(item.booleanValue());
+						}
+						super.updateItem(item, empty);
+					}
+				};
+			}
+		});
+		*/
 		eventCol.setCellValueFactory(new PropertyValueFactory<EventsBean, String>("event"));
 		dateCol.setCellValueFactory(new PropertyValueFactory<EventsBean, LocalDate>("date"));
-		doneCol.setCellValueFactory(new PropertyValueFactory<EventsBean, Boolean>("done"));
 		observationCol.setCellValueFactory(new PropertyValueFactory<EventsBean, String>("observation"));
+		removeCol.setCellValueFactory(cellData -> cellData.getValue().selectedProperty());
 		observationCol.setCellFactory(TextFieldTableCell.<EventsBean>forTableColumn());
 		observationCol.setOnEditCommit((CellEditEvent<EventsBean, String> t) -> {
 			((EventsBean) t.getTableView().getItems().get(t.getTablePosition().getRow()))
 					.setObservation(t.getNewValue());
 		});
-		doneCol.setCellValueFactory(new PropertyValueFactory<EventsBean, Boolean>("remove"));
 		observationCol.setSortable(false);
 
 		eventsTable.setItems(dataList);
@@ -98,10 +115,21 @@ public class ToDoListController implements Initializable {
 
 		bttnAddEvent.setOnAction((ActionEvent e) -> {
 			text = eventsSelector.getValue().toString();
-			dataList.add(new EventsBean(text, isoDate, ""));
+			dataList.add(new EventsBean(text, isoDate, "", false));
 		});
 		
 		bttnRemove.setOnAction((ActionEvent e) -> {
+			
+			for(EventsBean bean: dataList){
+				if(bean.getSelected()){
+					dataList.remove(bean);
+				}
+			}
+			
+			
+			
+			//EventsBean selectedItem = eventsTable.getSelectionModel().getSelectedItem();
+			//eventsTable.getItems().remove(selectedItem);
 			System.out.println("Works");
 		});
 
