@@ -40,9 +40,6 @@ public class EventsBean {
 		return selectedProperty().get();
 	}
 
-	public void setSelected(boolean selected){
-		selectedProperty().set(selected);
-	}
 	public SimpleBooleanProperty selectedProperty() {
 		return this.selected;
 	}

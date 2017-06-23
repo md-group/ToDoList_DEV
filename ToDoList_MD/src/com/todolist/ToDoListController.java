@@ -77,28 +77,9 @@ public class ToDoListController implements Initializable {
 		} catch (IOException e) {
 			System.out.println("Don t find file");
 		}
-		
+
 		doneCol.setCellFactory(CheckBoxTableCell.forTableColumn(doneCol));
 		removeCol.setCellFactory(CheckBoxTableCell.forTableColumn(removeCol));
-		/*
-		removeCol.setCellFactory(new Callback<TableColumn<EventsBean,Boolean>, TableCell<EventsBean,Boolean>>() {
-			
-			@Override
-			public TableCell<EventsBean, Boolean> call(TableColumn<EventsBean, Boolean> param) {
-				return new CheckBoxTableCell<EventsBean,Boolean>(){
-					
-					@Override
-					public void updateItem(Boolean item, boolean empty) {
-						if(!empty && item != null){
-							EventsBean selectedItem = (EventsBean)getTableRow().getItem();
-							selectedItem.setSelected(item.booleanValue());
-						}
-						super.updateItem(item, empty);
-					}
-				};
-			}
-		});
-		*/
 		eventCol.setCellValueFactory(new PropertyValueFactory<EventsBean, String>("event"));
 		dateCol.setCellValueFactory(new PropertyValueFactory<EventsBean, LocalDate>("date"));
 		observationCol.setCellValueFactory(new PropertyValueFactory<EventsBean, String>("observation"));
@@ -114,23 +95,27 @@ public class ToDoListController implements Initializable {
 		eventsTable.setEditable(true);
 
 		bttnAddEvent.setOnAction((ActionEvent e) -> {
-			text = eventsSelector.getValue().toString();
-			dataList.add(new EventsBean(text, isoDate, "", false));
+			try {
+				text = eventsSelector.getValue().toString();
+				dataList.add(new EventsBean(text, isoDate, "", false));
+			} catch (Exception e1) {
+				System.out.println("Nothing selected");
+			}
 		});
-		
+
 		bttnRemove.setOnAction((ActionEvent e) -> {
-			
-			for(EventsBean bean: dataList){
-				if(bean.getSelected()){
-					dataList.remove(bean);
+			ObservableList<EventsBean> dataListToRemove = FXCollections.observableArrayList();
+			for (EventsBean bean : dataList) {
+				if (bean.getSelected()) {
+					dataListToRemove.add(bean);
 				}
 			}
-			
-			
-			
-			//EventsBean selectedItem = eventsTable.getSelectionModel().getSelectedItem();
-			//eventsTable.getItems().remove(selectedItem);
-			System.out.println("Works");
+			dataList.removeAll(dataListToRemove);
+
+			// Below code it is for delete a focused row
+			// EventsBean selectedItem =
+			// eventsTable.getSelectionModel().getSelectedItem();
+			// eventsTable.getItems().remove(selectedItem);
 		});
 
 	}
