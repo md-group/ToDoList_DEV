@@ -51,7 +51,7 @@ public class ToDoListController implements Initializable {
 	private TableColumn<EventsBean, LocalDate> dateCol;
 
 	@FXML
-	private TableColumn<EventsBean, Boolean> doneCol;
+	private TableColumn<EventsBean, String> doneCol;
 
 	@FXML
 	private TableColumn<EventsBean, String> observationCol;
@@ -78,10 +78,15 @@ public class ToDoListController implements Initializable {
 			System.out.println("Don t find file");
 		}
 
-		doneCol.setCellFactory(CheckBoxTableCell.forTableColumn(doneCol));
 		removeCol.setCellFactory(CheckBoxTableCell.forTableColumn(removeCol));
 		eventCol.setCellValueFactory(new PropertyValueFactory<EventsBean, String>("event"));
 		dateCol.setCellValueFactory(new PropertyValueFactory<EventsBean, LocalDate>("date"));
+		doneCol.setCellValueFactory(new PropertyValueFactory<EventsBean, String>("done"));
+		doneCol.setCellFactory(TextFieldTableCell.<EventsBean>forTableColumn());
+		doneCol.setOnEditCommit((CellEditEvent<EventsBean, String> t) -> {
+			((EventsBean) t.getTableView().getItems().get(t.getTablePosition().getRow()))
+					.setDone(t.getNewValue());
+		});
 		observationCol.setCellValueFactory(new PropertyValueFactory<EventsBean, String>("observation"));
 		removeCol.setCellValueFactory(cellData -> cellData.getValue().selectedProperty());
 		observationCol.setCellFactory(TextFieldTableCell.<EventsBean>forTableColumn());
@@ -97,7 +102,7 @@ public class ToDoListController implements Initializable {
 		bttnAddEvent.setOnAction((ActionEvent e) -> {
 			try {
 				text = eventsSelector.getValue().toString();
-				dataList.add(new EventsBean(text, isoDate, "", false));
+				dataList.add(new EventsBean(text, isoDate, "",  "", false));
 			} catch (Exception e1) {
 				System.out.println("Nothing selected");
 			}
@@ -113,8 +118,7 @@ public class ToDoListController implements Initializable {
 			dataList.removeAll(dataListToRemove);
 
 			// Below code it is for delete a focused row
-			// EventsBean selectedItem =
-			// eventsTable.getSelectionModel().getSelectedItem();
+			// EventsBean selectedItem = eventsTable.getSelectionModel().getSelectedItem();
 			// eventsTable.getItems().remove(selectedItem);
 		});
 
