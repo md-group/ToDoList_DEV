@@ -1,10 +1,16 @@
 package com.todolist;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
@@ -66,6 +72,7 @@ public class ToDoListController implements Initializable {
 
 	ObservableList<EventsBean> dataList = FXCollections.observableArrayList();
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		System.out.println("The pane loaded");
@@ -106,6 +113,31 @@ public class ToDoListController implements Initializable {
 			} catch (Exception e1) {
 				System.out.println("Nothing selected");
 			}
+			try {
+				FileOutputStream fos = new FileOutputStream("Objectsavefile.ser");
+				ObjectOutputStream oos = new ObjectOutputStream(fos);
+				oos.writeObject(new ArrayList<EventsBean>(dataList));
+				oos.close();
+				System.out.println("Works");
+			} catch (FileNotFoundException e1) {
+				e1.printStackTrace();
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
+			
+			try {
+				FileInputStream in = new FileInputStream("Objectsavefile.ser");
+				ObjectInputStream ois = new ObjectInputStream(in);
+				dataList.setAll((List<EventsBean>)ois.readObject());
+				ois.close();
+				System.out.println("Works");
+			} catch (FileNotFoundException e1) {
+				e1.printStackTrace();
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			} catch (ClassNotFoundException e1) {
+				e1.printStackTrace();
+			}
 		});
 
 		bttnRemove.setOnAction((ActionEvent e) -> {
@@ -121,6 +153,5 @@ public class ToDoListController implements Initializable {
 			// EventsBean selectedItem = eventsTable.getSelectionModel().getSelectedItem();
 			// eventsTable.getItems().remove(selectedItem);
 		});
-
 	}
 }
