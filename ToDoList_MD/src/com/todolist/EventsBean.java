@@ -6,9 +6,12 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.time.LocalDate;
 
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 
 public class EventsBean implements Serializable{
 	
@@ -30,50 +33,80 @@ public class EventsBean implements Serializable{
 		this.observation = new SimpleStringProperty(observation);
 		this.selected = new SimpleBooleanProperty(selected);
 	}
+	
+	public StringProperty eventProperty(){
+		return event;
+	}
+	
 	public String getEvent() {
-		return event.get();
+		return eventProperty().get();
+	}
+	
+	public final void setEvent(String event) {
+		eventProperty().set(event);
+	}
+	
+	public ObjectProperty<LocalDate> dateProperty(){
+		return date;
 	}
 	
 	public LocalDate getDate() {
-		return date.get();
+		return dateProperty().get();
+	}
+	
+	public final void setDate(LocalDate date) {
+		dateProperty().set(date);
+	}
+	
+	public StringProperty doneProperty(){
+		return done;
 	}
 	
 	public String getDone() {
-		return done.get();
+		return doneProperty().get();
 	}
-	public void setDone(String done) {
-		this.done.set(done);
+	public final void setDone(String done) {
+		doneProperty().set(done);
+	}
+	
+	public StringProperty observationProperty(){
+		return observation;
 	}
 	
 	public String getObservation(){
-		return observation.get();
+		return observationProperty().get();
 	}
 	
-	public void setObservation(String observation) {
-		this.observation.set(observation);
+	public final void setObservation(String observation) {
+		observationProperty().set(observation);
 	}
 
+	public BooleanProperty selectedProperty() {
+		return selected;
+	}
+	
 	public boolean getSelected(){
 		return selectedProperty().get();
 	}
 
-	public SimpleBooleanProperty selectedProperty() {
-		return this.selected;
+	public final void setSelected(boolean selected) {
+		selectedProperty().set(selected);
 	}
 	
 	private void writeObject(ObjectOutputStream s) throws IOException {
-		s.defaultWriteObject();
-		s.writeObject(getEvent());
-		s.writeObject(getDate());
-		s.writeObject(getDone());
-		s.writeObject(getObservation());
-		s.writeBoolean(getSelected());
-	}
-	
-	private void readObject(ObjectInputStream s) throws IOException, ClassNotFoundException {
-		s.defaultReadObject();
-		this.event = new SimpleStringProperty((String)s.readObject());
-		this.date = new SimpleObjectProperty<>((LocalDate)s.readObject());
+        s.defaultWriteObject();
+        s.writeObject(getEvent()); // write event as a plain String
+        s.writeObject(getDate()); 
+        s.writeObject(getDone());
+        s.writeObject(getObservation());
+        s.writeBoolean(getSelected());
+    }
+
+    // custom deserialization:
+    private void readObject(ObjectInputStream s) throws IOException, ClassNotFoundException {
+        s.defaultReadObject();
+        this.event = new SimpleStringProperty((String)s.readObject());
+        this.date = new SimpleObjectProperty<>((LocalDate)s.readObject());
         this.done = new SimpleStringProperty((String)s.readObject());
         this.observation = new SimpleStringProperty((String)s.readObject());
         this.selected = new SimpleBooleanProperty(s.readBoolean());

@@ -1,7 +1,6 @@
 package com.todolist;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -72,7 +71,6 @@ public class ToDoListController implements Initializable {
 
 	ObservableList<EventsBean> dataList = FXCollections.observableArrayList();
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		System.out.println("The pane loaded");
@@ -91,53 +89,33 @@ public class ToDoListController implements Initializable {
 		doneCol.setCellValueFactory(new PropertyValueFactory<EventsBean, String>("done"));
 		doneCol.setCellFactory(TextFieldTableCell.<EventsBean>forTableColumn());
 		doneCol.setOnEditCommit((CellEditEvent<EventsBean, String> t) -> {
-			((EventsBean) t.getTableView().getItems().get(t.getTablePosition().getRow()))
-					.setDone(t.getNewValue());
+			t.getTableView().getItems().get(t.getTablePosition().getRow()).setDone(t.getNewValue());
 		});
 		observationCol.setCellValueFactory(new PropertyValueFactory<EventsBean, String>("observation"));
 		removeCol.setCellValueFactory(cellData -> cellData.getValue().selectedProperty());
 		observationCol.setCellFactory(TextFieldTableCell.<EventsBean>forTableColumn());
 		observationCol.setOnEditCommit((CellEditEvent<EventsBean, String> t) -> {
-			((EventsBean) t.getTableView().getItems().get(t.getTablePosition().getRow()))
+			t.getTableView().getItems().get(t.getTablePosition().getRow())
 					.setObservation(t.getNewValue());
 		});
 		observationCol.setSortable(false);
-
+		
+		loadPersistence();
+		
 		eventsTable.setItems(dataList);
 		eventsTable.setEditable(true);
+
 
 		bttnAddEvent.setOnAction((ActionEvent e) -> {
 			try {
 				text = eventsSelector.getValue().toString();
-				dataList.add(new EventsBean(text, isoDate, "",  "", false));
+				dataList.add(new EventsBean(text, isoDate, "", "", false));
 			} catch (Exception e1) {
 				System.out.println("Nothing selected");
 			}
-			try {
-				FileOutputStream fos = new FileOutputStream("Objectsavefile.ser");
-				ObjectOutputStream oos = new ObjectOutputStream(fos);
-				oos.writeObject(new ArrayList<EventsBean>(dataList));
-				oos.close();
-				System.out.println("Works");
-			} catch (FileNotFoundException e1) {
-				e1.printStackTrace();
-			} catch (IOException e1) {
-				e1.printStackTrace();
-			}
 			
-			try {
-				FileInputStream in = new FileInputStream("Objectsavefile.ser");
-				ObjectInputStream ois = new ObjectInputStream(in);
-				dataList.setAll((List<EventsBean>)ois.readObject());
-				ois.close();
-				System.out.println("Works");
-			} catch (FileNotFoundException e1) {
-				e1.printStackTrace();
-			} catch (IOException e1) {
-				e1.printStackTrace();
-			} catch (ClassNotFoundException e1) {
-				e1.printStackTrace();
-			}
+			setPersistence();
+
 		});
 
 		bttnRemove.setOnAction((ActionEvent e) -> {
@@ -148,10 +126,49 @@ public class ToDoListController implements Initializable {
 				}
 			}
 			dataList.removeAll(dataListToRemove);
-
+			
+			setPersistence();
+			
 			// Below code it is for delete a focused row
-			// EventsBean selectedItem = eventsTable.getSelectionModel().getSelectedItem();
+			// EventsBean selectedItem =
+			// eventsTable.getSelectionModel().getSelectedItem();
 			// eventsTable.getItems().remove(selectedItem);
 		});
+
+		}
+	
+	public void setPersistence() {
+		try {
+	         FileOutputStream fileOut = new FileOutputStream("Object.ser");
+	         ObjectOutputStream out = new ObjectOutputStream(fileOut);
+	         out.writeObject(new ArrayList<EventsBean>(dataList));
+	         out.close();
+	         fileOut.close();
+	         System.out.printf("Serialized data is saved in Object.ser");
+	      }catch(IOException i) {
+	         i.printStackTrace();
+	      }
+	}
+	
+	@SuppressWarnings("unchecked")
+	public void loadPersistence() {
+		try {
+	         FileInputStream fileIn = new FileInputStream("Object.ser");
+	         ObjectInputStream in = new ObjectInputStream(fileIn);
+	         dataList.setAll((List<EventsBean>)in.readObject());
+	         in.close();
+	         fileIn.close();
+	      }catch(IOException i) {
+	         i.printStackTrace();
+	         return;
+	      }catch(ClassNotFoundException c) {
+	         System.out.println("Employee class not found");
+	         c.printStackTrace();
+	         return;
+	      }
 	}
 }
+
+
+
+	
