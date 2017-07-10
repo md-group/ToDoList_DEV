@@ -45,6 +45,9 @@ public class ToDoListController implements Initializable {
 
 	@FXML
 	private Button bttnRemove;
+	
+    @FXML
+    private Button bttnSetInfo;
 
 	@FXML
 	private TableView<EventsBean> eventsTable;
@@ -88,16 +91,11 @@ public class ToDoListController implements Initializable {
 		dateCol.setCellValueFactory(new PropertyValueFactory<EventsBean, LocalDate>("date"));
 		doneCol.setCellValueFactory(new PropertyValueFactory<EventsBean, String>("done"));
 		doneCol.setCellFactory(TextFieldTableCell.<EventsBean>forTableColumn());
-		doneCol.setOnEditCommit((CellEditEvent<EventsBean, String> t) -> {
-			t.getTableView().getItems().get(t.getTablePosition().getRow()).setDone(t.getNewValue());
-		});
+		
 		observationCol.setCellValueFactory(new PropertyValueFactory<EventsBean, String>("observation"));
 		removeCol.setCellValueFactory(cellData -> cellData.getValue().selectedProperty());
 		observationCol.setCellFactory(TextFieldTableCell.<EventsBean>forTableColumn());
-		observationCol.setOnEditCommit((CellEditEvent<EventsBean, String> t) -> {
-			t.getTableView().getItems().get(t.getTablePosition().getRow())
-					.setObservation(t.getNewValue());
-		});
+		
 		observationCol.setSortable(false);
 		
 		loadPersistence();
@@ -105,7 +103,19 @@ public class ToDoListController implements Initializable {
 		eventsTable.setItems(dataList);
 		eventsTable.setEditable(true);
 
-
+		bttnSetInfo.setOnAction((ActionEvent e) -> {
+			doneCol.setOnEditCommit((CellEditEvent<EventsBean, String> t) -> {
+				t.getTableView().getItems().get(t.getTablePosition().getRow()).setDone(t.getNewValue());
+			});
+			
+			observationCol.setOnEditCommit((CellEditEvent<EventsBean, String> t) -> {
+				t.getTableView().getItems().get(t.getTablePosition().getRow())
+						.setObservation(t.getNewValue());
+			});
+			
+			setPersistence();
+		});
+		
 		bttnAddEvent.setOnAction((ActionEvent e) -> {
 			try {
 				text = eventsSelector.getValue().toString();
@@ -144,7 +154,7 @@ public class ToDoListController implements Initializable {
 	         out.writeObject(new ArrayList<EventsBean>(dataList));
 	         out.close();
 	         fileOut.close();
-	         System.out.printf("Serialized data is saved in Object.ser");
+	         System.out.println("works to save");
 	      }catch(IOException i) {
 	         i.printStackTrace();
 	      }
@@ -158,11 +168,12 @@ public class ToDoListController implements Initializable {
 	         dataList.setAll((List<EventsBean>)in.readObject());
 	         in.close();
 	         fileIn.close();
+	         System.out.println("Works to load");
 	      }catch(IOException i) {
 	         i.printStackTrace();
 	         return;
 	      }catch(ClassNotFoundException c) {
-	         System.out.println("Employee class not found");
+	         System.out.println("EventBean class not found");
 	         c.printStackTrace();
 	         return;
 	      }

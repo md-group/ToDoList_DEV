@@ -17,18 +17,23 @@
       </Button>
       <DatePicker fx:id="pickerDate" layoutX="150.0" layoutY="14.0" onAction="#pickerDateAction" prefHeight="25.0" prefWidth="104.0" promptText="Date" styleClass="DatePicker" stylesheets="@ToDoListStyle.css" AnchorPane.topAnchor="13.0" />
       <ComboBox fx:id="eventsSelector" editable="true" layoutX="282.0" layoutY="14.0" prefHeight="25.0" prefWidth="510.0" promptText="Events..." AnchorPane.topAnchor="13.0" />
-      <Button fx:id="bttnRemove" layoutX="8.0" layoutY="495.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="104.0" styleClass="Button" stylesheets="@ToDoListStyle.css" text="Remove" AnchorPane.bottomAnchor="8.0">
+      <Button fx:id="bttnRemove" layoutX="128.0" layoutY="494.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="104.0" styleClass="Button" stylesheets="@ToDoListStyle.css" text="Remove" AnchorPane.bottomAnchor="8.0">
          <font>
             <Font name="Yu Gothic Bold" size="12.0" />
          </font></Button>
       <TableView fx:id="eventsTable" layoutX="9.0" layoutY="53.0" prefHeight="433.0" prefWidth="785.0" AnchorPane.bottomAnchor="40.0" AnchorPane.leftAnchor="6.0" AnchorPane.rightAnchor="6.0" AnchorPane.topAnchor="50.0">
         <columns>
           <TableColumn fx:id="eventCol" prefWidth="363.0" text="Event" />
-          <TableColumn fx:id="dateCol" prefWidth="100.0" text="Date" />
-            <TableColumn fx:id="doneCol" prefWidth="51.0" text="Done" />
-            <TableColumn fx:id="observationCol" prefWidth="205.0" text="Observation" />
+          <TableColumn fx:id="dateCol" prefWidth="73.0" text="Date" />
+            <TableColumn fx:id="doneCol" prefWidth="53.0" text="Done" />
+            <TableColumn fx:id="observationCol" prefWidth="230.0" text="Observation" />
             <TableColumn fx:id="removeCol" prefWidth="66.0" text="Remove" />
         </columns>
       </TableView>
+      <Button fx:id="bttnSetInfo" layoutX="8.0" layoutY="489.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="104.0" styleClass="Button" stylesheets="@ToDoListStyle.css" text="Save" AnchorPane.bottomAnchor="7.0">
+         <font>
+            <Font name="Yu Gothic Bold" size="12.0" />
+         </font>
+      </Button>
    </children>
 </AnchorPane>

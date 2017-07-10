@@ -16,9 +16,6 @@ import javafx.beans.property.StringProperty;
 public class EventsBean implements Serializable{
 	
 	
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private transient SimpleStringProperty event;
 	private transient SimpleObjectProperty<LocalDate> date;
