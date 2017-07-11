@@ -7,12 +7,55 @@ AnchorPane{
 	-fx-border-radius: 0 0 0 0;
 	-fx-background-radius: 0 0 0 0;
 }
-.Button{
+#bttnAddEvent{
+	-fx-border-color: #41acf4;
+	-fx-border-width: 1 1 1 1;
+	-fx-background-color: #42e2f4;
+	-fx-effect: innershadow(gaussian, white, 10, 0.5, 0, 0); 
+}
+
+#bttnAddEvent:hover {
+	-fx-background-color: rgba(66, 266, 244, 0.8);
+}
+#bttnRemove{
+	-fx-border-color: #41acf4;
+	-fx-border-width: 1 1 1 1;
+	-fx-background-color: #42e2f4;
+	-fx-effect: innershadow(gaussian, white, 10, 0.5, 0, 0); 
+}
+
+#bttnRemove:hover {
+	-fx-background-color: rgba(66, 266, 244, 0.8);
+}
+
+#bttnSetInfo{
+	-fx-border-color: #41acf4;
+	-fx-border-width: 1 1 1 1;
+	-fx-background-color: #42e2f4;
+	-fx-effect: innershadow(gaussian, white, 10, 0.5, 0, 0); 
+}
+
+#bttnSetInfo:hover {
+	-fx-background-color: rgba(66, 266, 244, 0.8);
+}
+#bttnPrint{
+	-fx-border-color: #41acf4;
+	-fx-border-width: 1 1 1 1;
+	-fx-background-color: #42e2f4;
+	-fx-effect: innershadow(gaussian, white, 10, 0.5, 0, 0); 
+}
+
+#bttnPrint:hover {
+	-fx-background-color: rgba(66, 266, 244, 0.8);
+}
+
+.DatePicker{
 	-fx-border-color: #41acf4;
 	-fx-border-width: 1 1 1 1;
 	-fx-background-color: #42e2f4;
 }
-.DatePicker{
+
+.ComboBox{
 	-fx-border-color: #41acf4;
 	-fx-border-width: 1 1 1 1;
 	-fx-background-color: #42e2f4;

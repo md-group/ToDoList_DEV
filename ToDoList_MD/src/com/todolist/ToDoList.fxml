@@ -8,15 +8,15 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="528.0" prefWidth="800.0" styleClass="Button" stylesheets="@ToDoListStyle.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.todolist.ToDoListController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="528.0" prefWidth="800.0" stylesheets="@ToDoListStyle.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.todolist.ToDoListController">
    <children>
-      <Button fx:id="bttnAddEvent" layoutX="8.0" layoutY="14.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="104.0" styleClass="Button" stylesheets="@ToDoListStyle.css" text="Add Event" AnchorPane.topAnchor="13.0">
+      <Button fx:id="bttnAddEvent" layoutX="8.0" layoutY="14.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="104.0" style="hover: red;" styleClass="Button" stylesheets="@ToDoListStyle.css" text="Add Event" AnchorPane.topAnchor="13.0">
          <font>
             <Font name="Yu Gothic Bold" size="12.0" />
          </font>
       </Button>
       <DatePicker fx:id="pickerDate" layoutX="150.0" layoutY="14.0" onAction="#pickerDateAction" prefHeight="25.0" prefWidth="104.0" promptText="Date" styleClass="DatePicker" stylesheets="@ToDoListStyle.css" AnchorPane.topAnchor="13.0" />
-      <ComboBox fx:id="eventsSelector" editable="true" layoutX="282.0" layoutY="14.0" prefHeight="25.0" prefWidth="510.0" promptText="Events..." AnchorPane.topAnchor="13.0" />
+      <ComboBox fx:id="eventsSelector" editable="true" layoutX="282.0" layoutY="14.0" prefHeight="25.0" prefWidth="510.0" promptText="Events..." styleClass="ComboBox" stylesheets="@ToDoListStyle.css" AnchorPane.topAnchor="13.0" />
       <Button fx:id="bttnRemove" layoutX="128.0" layoutY="494.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="104.0" styleClass="Button" stylesheets="@ToDoListStyle.css" text="Remove" AnchorPane.bottomAnchor="8.0">
          <font>
             <Font name="Yu Gothic Bold" size="12.0" />
@@ -31,6 +31,11 @@
         </columns>
       </TableView>
       <Button fx:id="bttnSetInfo" layoutX="8.0" layoutY="489.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="104.0" styleClass="Button" stylesheets="@ToDoListStyle.css" text="Save" AnchorPane.bottomAnchor="7.0">
+         <font>
+            <Font name="Yu Gothic Bold" size="12.0" />
+         </font>
+      </Button>
+      <Button fx:id="bttnPrint" layoutX="688.0" layoutY="495.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="104.0" styleClass="Button" stylesheets="@ToDoListStyle.css" text="Print">
          <font>
             <Font name="Yu Gothic Bold" size="12.0" />
          </font>

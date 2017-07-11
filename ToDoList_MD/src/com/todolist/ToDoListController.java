@@ -19,6 +19,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.print.PrinterJob;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
@@ -48,6 +49,9 @@ public class ToDoListController implements Initializable {
 	
     @FXML
     private Button bttnSetInfo;
+   
+    @FXML
+    private Button bttnPrint;
 
 	@FXML
 	private TableView<EventsBean> eventsTable;
@@ -144,6 +148,13 @@ public class ToDoListController implements Initializable {
 			// eventsTable.getSelectionModel().getSelectedItem();
 			// eventsTable.getItems().remove(selectedItem);
 		});
+		
+		bttnPrint.setOnAction((ActionEvent e) -> {
+			PrinterJob printerJob = PrinterJob.createPrinterJob();
+			if(printerJob.showPrintDialog(null) && printerJob.printPage(eventsTable)) {
+				printerJob.endJob();
+			}
+		});
 
 		}
 	
@@ -154,7 +165,6 @@ public class ToDoListController implements Initializable {
 	         out.writeObject(new ArrayList<EventsBean>(dataList));
 	         out.close();
 	         fileOut.close();
-	         System.out.println("works to save");
 	      }catch(IOException i) {
 	         i.printStackTrace();
 	      }
@@ -168,7 +178,6 @@ public class ToDoListController implements Initializable {
 	         dataList.setAll((List<EventsBean>)in.readObject());
 	         in.close();
 	         fileIn.close();
-	         System.out.println("Works to load");
 	      }catch(IOException i) {
 	         i.printStackTrace();
 	         return;
